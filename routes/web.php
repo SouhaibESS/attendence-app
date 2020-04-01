@@ -19,6 +19,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('/management', 'UserController@managerIndex')->middleware('can:isManager')->name('manager.index');
+Route::get('/management/filiere/{filiere}', 'UserController@mShowFiliere')->middleware('can:isManager')->name('manager.filiere.show');
+Route::get('/management/student/{student}', 'UserController@mShowstudent')->middleware('can:isManager')->name('manager.student.show');
+Route::put('/management/student/{student}', 'UserController@mJustifyAbsence')->middleware('can:isManager')->name('manager.justify');
+
+
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/matiere/{matiere}', 'HomeController@matiereShow')->middleware('can:isTeacher')->name('matiere.show');
 Route::get('/filiere/{filiere}/matiere/{matiere}', 'HomeController@filiereShow')->middleware('can:isTeacher')->name('filiere.show');

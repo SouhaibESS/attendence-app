@@ -24,7 +24,7 @@ class Student extends Model
         return $this->hasMany(Absence::class);
     }
 
-    public function totalAbsenceNumbre()
+    public function totalAbsenceNumber()
     {
         $nmbr = DB::table('absences')
                     ->where('student_id', $this->id)
@@ -32,15 +32,40 @@ class Student extends Model
         return $nmbr;
     }
 
-    public function matiereAbsenceNumbre()
+    public function matiereAbsenceNumber()
     {
         $matieres = DB::table('matieres')
-                        ->join('absences', 'id', '=', 'absences.matiere_id')
+                        ->join('absences', 'matieres.id', '=', 'absences.matiere_id')
                         ->select('matieres.matiere_name', DB::raw('COUNT(absences.matiere_id) as nbrAbsencePerMatiere'))
                         ->where('student_id', $this->id)
                         ->groupBy('matieres.matiere_name')
                         ->orderBy('nbrAbsencePerMatiere', 'desc')
                         ->get();
         return $matieres;
+    }
+
+    public function unjustifiedAbsencesNumber()
+    {
+        $nmbr = Absence::where([
+            'student_id' => $this->id,
+            'justified' => 0
+            ])->count();
+
+        return $nmbr;
+    }
+
+    public function unjustifiedAbsences()
+    {
+        return Absence::where([
+                            'student_id' => $this->id,
+                            'justified' => 0
+                        ])->get();
+    }
+
+    public function justifyAbsence($absences = null)
+    {
+        if($absences)
+            foreach($absences as $absence)
+                Absence::where('id', $absence)->update(['justified'=> 1]);
     }
 }

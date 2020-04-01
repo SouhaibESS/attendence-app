@@ -15,9 +15,9 @@
                 {{ __('Logout') }}
             </a>
             
-            @can('manage-users')
-                <a href="{{ route('users.index') }}" class="dropdown-item">
-                    Manage Users
+            @can('isManager')
+                <a href="{{ route('manager.index') }}" class="dropdown-item">
+                    Home Page
                 </a>
             @endcan
 
