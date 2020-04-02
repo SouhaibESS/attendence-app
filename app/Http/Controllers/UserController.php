@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Filiere;
+use App\Matiere;
+use App\Role;
 use App\User;
 use App\Student;
 use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -38,7 +41,12 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        if(Gate::allows('isAdmin'))
+        {
+            $roles = Role::all();
+            return view('admin.create', compact('roles'));
+        }
+        return redirect()->back();
     }
 
     /**
@@ -49,7 +57,18 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate($this->validation());
+        
+        $user = User::create([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => Hash::make($request['password']),
+        ]);
+
+        $user->roles()->attach($request['role']);
+        
+        $request->session()->flash('success', 'user added succesfuly!');
+        return redirect(route('users.index'));
     }
 
     /**
@@ -71,7 +90,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        $matieres = Matiere::all();
+        return view('admin.edit', compact('user', 'matieres'));
     }
 
     /**
@@ -83,7 +103,19 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'matieres' => 'required'
+        ]);
+
+        $user->update([
+            'name' => $request['name']
+        ]);
+
+        $user->matieres()->attach($request['matieres']);
+        
+        $request->session()->flash('success', 'teacher ' . $user->name . ' updated');
+        return redirect(route('users.index'));
     }
 
     /**
@@ -94,9 +126,24 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+        
+        request()->session()->flash('userDeleted', 'user deleted');
+        return redirect(route('users.index'));
     }
 
+    public function validation()
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => 'required'
+        ];
+    }
+
+
+    // MANAGER METHODS
     public function managerIndex()
     {
         $filieres = Filiere::all();

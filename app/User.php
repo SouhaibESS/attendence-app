@@ -71,7 +71,7 @@ class User extends Authenticatable
 
     public function hasMatiere($matiere)
     {
-        if($this->matieres()->where('id', $matiere->id)->first())
+        if($this->matieres()->where('id', $matiere)->first())
             return true;
         return false;
         
