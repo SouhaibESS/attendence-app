@@ -21,6 +21,12 @@
                 </a>
             @endcan
 
+            @can('isAdmin')
+                <a href="{{ route('users.index') }}" class="dropdown-item">
+                    Home Page
+                </a>
+            @endcan
+
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf
             </form>

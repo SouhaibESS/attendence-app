@@ -19,6 +19,15 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('/admin/filiere/{filiere}', 'FiliereController@show')->middleware('can:isAdmin')->name('filieres.show');
+Route::get('/admin/filiere/create', 'FiliereController@create')->middleware('can:isAdmin')->name('filieres.create');
+Route::post('/admin/filiere', 'FiliereController@store')->middleware('can:isAdmin')->name('filieres.store');
+Route::get('/admin/student', 'StudentController@create')->middleware('can:isAdmin')->name('students.create');
+Route::post('/admin/student', 'StudentController@store')->middleware('can:isAdmin')->name('students.store');
+Route::get('/admin/student/{student}/edit', 'StudentController@edit')->middleware('can:isAdmin')->name('students.edit');
+Route::put('/admin/student/{student}/edit', 'StudentController@update')->middleware('can:isAdmin')->name('students.update');
+Route::delete('/admin/student/{student}', 'StudentController@destroy')->middleware('can:isAdmin')->name('students.destroy');
+
 Route::get('/management', 'UserController@managerIndex')->middleware('can:isManager')->name('manager.index');
 Route::get('/management/filiere/{filiere}', 'UserController@mShowFiliere')->middleware('can:isManager')->name('manager.filiere.show');
 Route::get('/management/student/{student}', 'UserController@mShowstudent')->middleware('can:isManager')->name('manager.student.show');

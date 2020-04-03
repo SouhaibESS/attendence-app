@@ -29,7 +29,10 @@ class UserController extends Controller
         if(Gate::allows('isAdmin'))
         {
             $teachers = User::teachers();
-            return view('admin.index', compact('teachers'));
+            $managers = User::managers();
+            $admins = User::admins();
+            $filieres = Filiere::all();
+            return view('admin.index', compact('teachers', 'managers', 'admins', 'filieres'));
         }
         return redirect()->back();
     }
@@ -105,7 +108,7 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'matieres' => 'required'
+            'matieres' => 'nullable'
         ]);
 
         $user->update([

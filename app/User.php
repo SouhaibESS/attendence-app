@@ -69,6 +69,20 @@ class User extends Authenticatable
         return $teacherRole->users;        
     }
 
+    public static function managers()
+    {
+        $managerRole = Role::where('name', 'manager')->first();
+
+        return $managerRole->users;
+    }
+
+    public static function admins()
+    {
+        $adminRole = Role::where('name', 'admin')->first();
+
+        return $adminRole->users;
+    }
+
     public function hasMatiere($matiere)
     {
         if($this->matieres()->where('id', $matiere)->first())

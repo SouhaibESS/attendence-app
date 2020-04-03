@@ -12,7 +12,7 @@ class Student extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['cne', 'filiere'];
+    protected $fillable = ['name', 'cne', 'filiere_id'];
 
     public function filiere()
     {
