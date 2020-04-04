@@ -27,6 +27,8 @@ Route::post('/admin/student', 'StudentController@store')->middleware('can:isAdmi
 Route::get('/admin/student/{student}/edit', 'StudentController@edit')->middleware('can:isAdmin')->name('students.edit');
 Route::put('/admin/student/{student}/edit', 'StudentController@update')->middleware('can:isAdmin')->name('students.update');
 Route::delete('/admin/student/{student}', 'StudentController@destroy')->middleware('can:isAdmin')->name('students.destroy');
+Route::get('/admin/module/create', 'ModuleController@create')->middleware('can:isAdmin')->name('modules.create');
+Route::post('/admin/module', 'ModuleController@store')->middleware('can:isAdmin')->name('modules.store');
 
 Route::get('/management', 'UserController@managerIndex')->middleware('can:isManager')->name('manager.index');
 Route::get('/management/filiere/{filiere}', 'UserController@mShowFiliere')->middleware('can:isManager')->name('manager.filiere.show');

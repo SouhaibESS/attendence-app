@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Filiere;
 use App\Matiere;
+use App\Module;
 use App\Role;
 use App\User;
 use App\Student;
@@ -32,7 +33,10 @@ class UserController extends Controller
             $managers = User::managers();
             $admins = User::admins();
             $filieres = Filiere::all();
-            return view('admin.index', compact('teachers', 'managers', 'admins', 'filieres'));
+            $modules = Module::all();
+            $modules->load('matieres');
+
+            return view('admin.index', compact('teachers', 'managers', 'admins', 'filieres', 'modules'));
         }
         return redirect()->back();
     }
