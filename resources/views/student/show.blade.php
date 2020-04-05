@@ -25,12 +25,12 @@
                         </span>
                         <span class="col justify-content-between w-75 d-flex h4">
                             <span class="float-left">Total Absences Number :</span>
-                            <span class="ml-4 float-right">{{ $student->totalAbsenceNumbre() }}</span>
+                            <span class="ml-4 float-right">{{ $student->totalAbsenceNumber() }}</span>
                         </span>
                     </div>
                 </p>
                 <hr class="my-4">
-                @if($student->totalAbsenceNumbre() == 0 )
+                @if($student->totalAbsenceNumber() == 0 )
                     <p class="h5 alert alert-success">Well Done! no absence you are a good student.</p>
                 @else
                     <p class="h5">
@@ -38,7 +38,7 @@
                         <small class="ml-2 alert-danger"><strong>if the number is colored in red you have to consult that matiere's teacher</strong></small>
                     </p>
                     <ul class="list-group">
-                        @foreach ($student->matiereAbsenceNumbre() as $matiere)
+                        @foreach ($student->matiereAbsenceNumber() as $matiere)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ $matiere->matiere_name }}
                                 <span class="badge @if($matiere->nbrAbsencePerMatiere >= 3) badge-danger @else badge-primary @endif badge-pill">{{ $matiere->nbrAbsencePerMatiere }}</span>

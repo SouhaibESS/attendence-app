@@ -17,23 +17,39 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
-Route::get('/admin/filiere/{filiere}', 'FiliereController@show')->middleware('can:isAdmin')->name('filieres.show');
-Route::get('/admin/filiere/create', 'FiliereController@create')->middleware('can:isAdmin')->name('filieres.create');
-Route::post('/admin/filiere', 'FiliereController@store')->middleware('can:isAdmin')->name('filieres.store');
-Route::get('/admin/student', 'StudentController@create')->middleware('can:isAdmin')->name('students.create');
-Route::post('/admin/student', 'StudentController@store')->middleware('can:isAdmin')->name('students.store');
-Route::get('/admin/student/{student}/edit', 'StudentController@edit')->middleware('can:isAdmin')->name('students.edit');
-Route::put('/admin/student/{student}/edit', 'StudentController@update')->middleware('can:isAdmin')->name('students.update');
-Route::delete('/admin/student/{student}', 'StudentController@destroy')->middleware('can:isAdmin')->name('students.destroy');
-Route::get('/admin/module/create', 'ModuleController@create')->middleware('can:isAdmin')->name('modules.create');
-Route::post('/admin/module', 'ModuleController@store')->middleware('can:isAdmin')->name('modules.store');
+Route::group(['prefix' => 'admin', 'middleware' => 'can:isAdmin'], function () {
+    
+    Route::group(['prefix' => 'filiere'], function () {
+        Route::get('{filiere}', 'FiliereController@show')->name('filieres.show');
+        Route::get('', 'FiliereController@create')->name('filieres.create');
+        Route::post('', 'FiliereController@store')->name('filieres.store');
+    });
 
-Route::get('/management', 'UserController@managerIndex')->middleware('can:isManager')->name('manager.index');
-Route::get('/management/filiere/{filiere}', 'UserController@mShowFiliere')->middleware('can:isManager')->name('manager.filiere.show');
-Route::get('/management/student/{student}', 'UserController@mShowstudent')->middleware('can:isManager')->name('manager.student.show');
-Route::put('/management/student/{student}', 'UserController@mJustifyAbsence')->middleware('can:isManager')->name('manager.justify');
+    Route::group(['prefix' => 'student'], function () {
+        Route::get('create', 'StudentController@create')->name('students.create');
+        Route::post('', 'StudentController@store')->name('students.store');
+        Route::get('{student}/edit', 'StudentController@edit')->name('students.edit');
+        Route::put('{student}/edit', 'StudentController@update')->name('students.update');
+        Route::delete('{student}', 'StudentController@destroy')->name('students.destroy');
+    });
+    
+    Route::group(['prefix' => 'module'], function () {
+        Route::get('create', 'ModuleController@create')->name('modules.create');
+        Route::post('', 'ModuleController@store')->name('modules.store');
+    });
+});
+
+Route::group(['prefix' => 'management', 'middleware' => 'can:isManager'], function () {
+    Route::get('', 'UserController@managerIndex')->name('manager.index');
+    Route::get('/filiere/{filiere}', 'UserController@mShowFiliere')->name('manager.filiere.show');
+    
+    Route::group(['prefix' => 'student'], function () {
+        Route::get('{student}', 'UserController@mShowstudent')->name('manager.student.show');
+    Route::put('{student}', 'UserController@mJustifyAbsence')->name('manager.justify');
+    });
+});
 
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -43,4 +59,4 @@ Route::post('/filiere/{filiere}/matiere/{matiere}', 'HomeController@storeAbsence
 Route::post('/student', 'StudentController@find')->name('student.find');
 Route::get('/student/{student}', 'StudentController@show')->name('student.show');
 
-Route::resource('/users', 'UserController');
+Route::resource('/users', 'UserController')->except('show');

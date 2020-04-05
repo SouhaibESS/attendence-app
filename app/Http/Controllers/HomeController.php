@@ -54,7 +54,7 @@ class HomeController extends Controller
 
     public function filiereShow(Filiere $filiere, Matiere $matiere)
     {
-        if(Gate::allows('teachesMatiere', [$matiere]) && Gate::allows('matiereBelongsToFiliere', [$filiere, $matiere]))
+        if(Gate::allows('isTeacher', [$matiere]) && Gate::allows('matiereBelongsToFiliere', [$filiere, $matiere]))
         {
             $filiere->load('students');
             return view('teacher.list', compact('filiere', 'matiere'));

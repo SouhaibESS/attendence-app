@@ -79,17 +79,6 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\User  $user
@@ -97,8 +86,12 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $matieres = Matiere::all();
-        return view('admin.edit', compact('user', 'matieres'));
+        if(Gate::allows('isAdmin'))
+        {
+            $matieres = Matiere::all();
+            return view('admin.edit', compact('user', 'matieres'));
+        }
+        return redirect()->back();
     }
 
     /**
