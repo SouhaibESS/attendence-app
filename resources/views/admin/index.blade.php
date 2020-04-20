@@ -258,9 +258,8 @@
             @endif
             
           </div>
-        </div>
 
-        <div class="card w-75">
+        <div class="card w-100">
           <div class="card-header font-weight-bold h3">Matieres :</div>
           <div class="card-body">
               <div class="accordion" id="accordionExample">
