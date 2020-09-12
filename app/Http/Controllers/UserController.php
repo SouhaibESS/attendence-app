@@ -29,16 +29,44 @@ class UserController extends Controller
     {
         if(Gate::allows('isAdmin'))
         {
-            $teachers = User::teachers();
-            $managers = User::managers();
-            $admins = User::admins();
-            $filieres = Filiere::all();
-            $modules = Module::all();
-            $modules->load('matieres');
+            $teachers = User::teachers()->count();
+            $managers = User::managers()->count();
+            $admins = User::admins()->count();
+            $filieres = Filiere::count();
+            $modules = Module::count();
 
             return view('admin.index', compact('teachers', 'managers', 'admins', 'filieres', 'modules'));
         }
         return redirect()->back();
+    }
+
+    public function teachers()
+    {
+        $teachers = User::teachers();
+
+        return view('admin.teachers', compact('teachers'));
+    }
+
+    public function managers()
+    {
+        $managers = User::managers();
+
+        return view('admin.managers', compact('managers'));
+    }
+
+    public function modules()
+    {
+        $modules = Module::all();
+        $modules->load('matieres');
+
+        return view('admin.modules', compact('modules'));
+    }
+
+    public function filieres()
+    {
+        $filieres = Filiere::all();
+
+        return view('admin.filieres', compact('filieres'));
     }
 
     /**
